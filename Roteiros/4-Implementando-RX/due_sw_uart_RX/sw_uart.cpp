@@ -28,10 +28,12 @@ int calc_even_parity(char data) {
     sum += (data >> i) & 0x01;
   }
 
-  if (sum % 2 == 0) {
+  if (sum % 2 == 0) 
+  {
     return 1;
   }
-  else {
+  else 
+  {
     return 0;
   }
   
@@ -62,9 +64,14 @@ int sw_uart_receive_byte(due_sw_uart *uart, char* data) {
   }
 
   _sw_uart_wait_T(uart);
+
+  //recebe dados
+  for(int i = 0; i<=7; i++){
+    nchar = (digitalRead(uart -> pin_rx) << i) | nchar;
+    _sw_uart_wait_T(uart);
+  }
   
   // recebe paridade
-
   rx_parity = digitalRead(uart -> pin_rx);
   _sw_uart_wait_T(uart);  
 
@@ -98,5 +105,4 @@ void _sw_uart_wait_T(due_sw_uart *uart) {
   _sw_uart_wait_half_T(uart);
   _sw_uart_wait_half_T(uart);
 }
-
 

@@ -30,10 +30,12 @@ int calc_even_parity(char data) {
     sum += (data >> i) & 0x01;
   }
 
-  if (sum % 2 == 1) {
+  if (sum % 2 == 1)
+   {
     return 0;
   }
-  else {
+  else
+   {
     return 1;
   }
 
