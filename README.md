@@ -33,11 +33,22 @@ OBSERVAÇÃO: na imagem, o payload está invertido devido ao shift realizado no 
  - Stop bit (1)
 
 ## Descrição do TX
-1. Transmissor
-     - serializar dados via uart embarcado no arduino
+#### Enviar START BIT
+
+Envia o valor 0 (LOW) para o pino TX
+
+``` digitalWrite(uart -> pin_tx, LOW);
+  _sw_uart_wait_T(uart); ```
      
-2. Receptor
-     - desserializar dados via uart embarcado no arduino
+#### Enviar START BIT
+
+O código percorre bit por bit de cada caractere e realiza um bit shift para a direita e também realizando um and com o byte 0x01. Desta forma, todos os bits são zerados, com excessão do mais significativo. A cada iteração, o bit shift faz com que o bit significativo seja alterado.
+
+```  for(int i = 0; i <= 7 ; i++) {
+    int pyl = data >> i & 0x01;
+    digitalWrite(uart -> pin_tx, pyl);
+    _sw_uart_wait_T(uart);
+  } ```
           
 3. Documentação
      - Explicar a comunicação UART
