@@ -10,9 +10,29 @@ Para a realização do projeto, foi utilizado o protocolo UART e dois Arduino Du
 ## Protocolo UART
 
 O protocolo UART possui como valor inicial 1 (sinal HIGH) e a recepção é iniciada quando é enviado um START BIT, de valor 0 (LOW). Com o START BIT enviado, a transmissão dos dados é iniciada.
-O payload é um caractere de uma palavra arbitrária a ser transmitida e cada caractere é um conjunto de 8 bits (1 byte). Após  
+Cada payload é um caractere de uma frase arbitrária a ser transmitida e cada caractere retorna um conjunto de 8 bits (1 byte). Após o envio do payload é enviado o bit de paridade, que tem por função checar se o pacote enviado está ou não corrompido.
+Por fim o STOP BIT, de valor 1 (HIGH), é enviado, retornando o protocolo ao seu estado inicial.
 
-## Requisitos 
+A imagem a seguir representa um pacote transmitido pelo protocolo UART.
+
+![UART](img/uart.png) 
+
+## Resultados no WaveForms
+
+O gráfico a seguir foi obtido utilizando um Arduino Due rodando o código de transmissão um Analog Discovery. O pino TX1 do Arduino foi conectado no pino 7 do Analog e ambos compontentes foram conectados no terra.
+ 
+![Grafico do WaveForms](img/transmissao.png) 
+
+No gráfico é possivel identificar os bits (considerando o pacote h4C):
+
+OBSERVAÇÃO: na imagem, o payload está invertido devido ao shift realizado no código (será explicado na seção seguinte).
+
+-Start bit (0)
+-Caractere L (01001100)
+-Parity bit (1)
+-Stop bit (1)
+
+## Descrição do TX
 1. Transmissor
      - serializar dados via uart embarcado no arduino
      
