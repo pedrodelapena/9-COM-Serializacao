@@ -1,35 +1,16 @@
----
-title: Camada Física -  APS 9 - Serialização/Desserialização 
-author: Rafael Corsi - rafael.corsi@insper.edu.br
-date: Outubro - 2017
----
+﻿
 
-![Interface entre módulos](./doc/projeto.png){width=50%}
+# Projeto 3.1 - Serialização/Desserialização 
 
-# APS 9 : Serialização/Desserialização 
+O objetivo principal deste projeto é a compreensão de como uma mensagem é serializada/desserializada nos níveis mais baixos de uma comunicação.
+Para a realização do projeto, foi utilizado o protocolo UART e dois Arduino Due.
 
-O objetivo principal desse projeto é o do entendimento de como uma mensagem é serializada e desserializada nos níveis mais baixos de uma comunicação.
 
-# Projeto
-
-Implementar a serialização/desserialização de um protocolo de comunicação (sugerimos o UART) em um arduino Due via software. 
-
-## Pré requisitos: 
-
-- Arduino Due
-- Arduino IDE (> 1.8)
-     - https://www.arduino.cc/en/Main/Software
-- Digilent WaveForms 2015 (> 3.6.8)
-     - http://store.digilentinc.com/waveforms-2015-download-only/
  
-## Entendendo o protocolo 
+## Protocolo UART
 
-O roteiro a seguir pretende guiar para o uso do analog discovery para análise de protocolos e também para o entendimento do protocolo UART. 
-
-- [Roteiro 1 : Analisando o protocolo UART](https://github.com/Insper/Camada-Fisica-Computacao/tree/master/3-Projetos/9-COM-Serializacao/Roteiros/1-Analise-Protocolo)
-- [Roteiro 2 : Recebendo dados via uart](https://github.com/Insper/Camada-Fisica-Computacao/tree/master/3-Projetos/9-COM-Serializacao/Roteiros/2-Recebendo-Dados)
-- [Roteiro 3 : Implementando o TX](https://github.com/Insper/Camada-Fisica-Computacao/tree/master/3-Projetos/9-COM-Serializacao/Roteiros/3-Implementando-TX)
-- [Roteiro 4 : Implementando o RX](https://github.com/Insper/Camada-Fisica-Computacao/tree/master/3-Projetos/9-COM-Serializacao/Roteiros/4-Implementando-RX)
+O protocolo UART possui como valor inicial 1 (sinal HIGH) e a recepção é iniciada quando é enviado um START BIT, de valor 0 (LOW). Com o START BIT enviado, a transmissão dos dados é iniciada.
+O payload é um caractere de uma palavra arbitrária a ser transmitida e cada caractere é um conjunto de 8 bits (1 byte). Após  
 
 ## Requisitos 
 1. Transmissor

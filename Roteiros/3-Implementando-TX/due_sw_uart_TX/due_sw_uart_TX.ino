@@ -13,7 +13,7 @@ void loop() {
 
 void test_write() {
   sw_uart_write_string(&uart,"Lux n é suporte\n");
-  delay(50);
+  delay(5);
 }
 
 void test_receive() {
