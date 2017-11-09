@@ -12,7 +12,7 @@ void loop() {
 }
 
 void test_write() {
-  sw_uart_write_string(&uart,"Cam-Fisica\n");
+  sw_uart_write_string(&uart,"Lux n é suporte\n");
   delay(50);
 }
 
