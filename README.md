@@ -15,22 +15,22 @@ Por fim o STOP BIT, de valor 1 (HIGH), é enviado, retornando o protocolo ao seu
 
 A imagem a seguir representa um pacote transmitido pelo protocolo UART.
 
-![UART](img/uart.png) 
+![UART](doc/uart.png) 
 
 ## Resultados no WaveForms
 
 O gráfico a seguir foi obtido utilizando um Arduino Due rodando o código de transmissão um Analog Discovery. O pino TX1 do Arduino foi conectado no pino 7 do Analog e ambos compontentes foram conectados no terra.
  
-![Grafico do WaveForms](img/transmissao.png) 
+![Grafico do WaveForms](doc/transmissao.png) 
 
 No gráfico é possivel identificar os bits (considerando o pacote h4C):
 
 OBSERVAÇÃO: na imagem, o payload está invertido devido ao shift realizado no código (será explicado na seção seguinte).
 
--Start bit (0)
--Caractere L (01001100)
--Parity bit (1)
--Stop bit (1)
+ - Start bit (0)
+ - Caractere L (01001100)
+ - Parity bit (1)
+ - Stop bit (1)
 
 ## Descrição do TX
 1. Transmissor
