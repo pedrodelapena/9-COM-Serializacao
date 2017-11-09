@@ -56,10 +56,18 @@ for(int i = 0; i <= 7 ; i++) {
    } 
  ```
           
-3. Documentação
-     - Explicar a comunicação UART
-     - Exibir a forma de onda gerada pela implementação (usando o analog discovery)
-     - Explicar o código
+#### Enviar Parity bit
+
+COMPLETAR DOC (CHEGA POR HJ)
+
+ ```
+for(int i = 0; i <= 7 ; i++) {
+     int pyl = data >> i & 0x01;
+     digitalWrite(uart -> pin_tx, pyl);
+     _sw_uart_wait_T(uart);
+   } 
+ ```
+
 
 ## Itens extras
 
