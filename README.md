@@ -33,7 +33,7 @@ OBSERVAÇÃO: na imagem, o payload está invertido devido ao shift realizado no 
  - Stop bit (1)
 
 ## Descrição do TX
-#### Enviar START BIT
+### Enviar START BIT
 
 Envia o valor 0 (LOW) para o pino TX
 
@@ -44,7 +44,7 @@ _sw_uart_wait_T(uart);
   }
  ```
      
-#### Enviar START BIT
+### Enviar START BIT
 
 O código percorre bit por bit de cada caractere e realiza um bit shift para a direita e também realizando um and com o byte 0x01. Desta forma, todos os bits são zerados, com excessão do mais significativo. A cada iteração, o bit shift faz com que o bit significativo seja alterado e enviado ao pino tx do arduino.
  
@@ -56,9 +56,9 @@ for(int i = 0; i <= 7 ; i++) {
    } 
  ```
           
-#### Parity bit
+### Parity bit
 
-***Cálculo do parity bit**: Inicialmente, o código realiza o mesmo processo que o código do envio do START BIT. Contudo, ao invés de enviar o bit mais significativo para o pino de transmissão, este é mantido em uma variável. Cada iteração faz com que o bit significativo seja somado aos bits significativos anteriores.
+**Cálculo do parity bit**: Inicialmente, o código realiza o mesmo processo que o código do envio do START BIT. Contudo, ao invés de enviar o bit mais significativo para o pino de transmissão, este é mantido em uma variável. Cada iteração faz com que o bit significativo seja somado aos bits significativos anteriores.
 
 Após a soma dos bits é posta uma condição pois deseja-se obter o bit de paridade IMPAR. Desta forma, se a divisão do valor da soma dos bits significativos for não divisível por 2, o código retorna 0 e caso contrário, retorna 1. 
 
@@ -102,7 +102,7 @@ int calc_even_parity(char data) {
   }
  ```
 
-#### Enviar STOP BIT
+### Enviar STOP BIT
 
 O envio de um pacote é finalizado com o envio do sinal 1 (HIGH) para o pino tx, fazendo com que o canal de transmissão volte ao seu estado inicial.
 
@@ -116,24 +116,54 @@ O envio de um pacote é finalizado com o envio do sinal 1 (HIGH) para o pino tx,
 
 ## Descrição do RX
 
-- Implementar um protocolo próprio de transmissão e recepção de dados.
+### Recebe START BIT
 
-## Validação
+O código faz um loop aguardando a recepção do valor 0 (LOW) no pino RX do arduino. Esta recepção é feita em duas partes para evitar que alguma ruído possa vir a ser reconhecido como start bit.
 
-- Em sala de aula, abrir as duas aplicações em computadores distintos e transmitir uma frase entre eles via o pipeline desenvolvido anteriormente.
+```
+  bool aguardante = false;
+  while (aguardante == false){
 
-## Rubricas
+  // Confirma start BIT
+    if (digitalRead(uart -> pin_rx) == 0 ){
+      _sw_uart_wait_half_T(uart);
+      
+  // checa se bit ainda é 0
+      if(digitalRead(uart -> pin_rx) == 0 ){
+        aguardante = true;
+      }
+    }
+  }
 
-| Nota | Descritivo                                                |
-|------|-----------------------------------------------------------|
-| A    | - Entregue no prazo                                       |
-|      | - Implementado um item do extras                          |
-| B    | - Entregue no prazo                                       |
-|      | - Implementado requisitos necessários                     |
-| C    | - Entregue fora do prazo                                  |
-|      | - Implementando requisitos necessários                    |
-| D    | - Nem todos os requisitos necessários foram implementados |
-| I    | - Não entregue                                            |
+  _sw_uart_wait_T(uart);
+  ```
+  
+### Recebe dados
 
+A recepção de dados é semelhante à transmissão de dados do TX. A diferença entre os códigos é a maneira que ocorre o bit shift. No caso da recepção, o bit shift é para a esquerda e é utilizado um or.
 
+```
+  for(int i = 0; i<=7; i++){
+    nchar = (digitalRead(uart -> pin_rx) << i) | nchar;
+    _sw_uart_wait_T(uart);
+  }
+  ```
+ 
+### Recebe parity
 
+O cálculo de paridade do código do TX e do RX deve ser igual para que ocorra o recebimento dos dados. 
+Após o recebimento de cada bit do payload, espera-se um tempo T para que seja iniciado o recebimento do próximo bit.
+
+```
+  rx_parity = digitalRead(uart -> pin_rx);
+  _sw_uart_wait_T(uart);  
+```
+
+### Recebe STOP BIT
+
+O final da recepção de um pacote é marcado pelo STOP BIT, possibilitando que a recepção de um outro pacote seja iniciada.
+
+```
+  recebe stop bit
+  int stopBit = digitalRead(uart -> pin_rx);
+```
