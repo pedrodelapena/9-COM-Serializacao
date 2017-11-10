@@ -46,7 +46,7 @@ _sw_uart_wait_T(uart);
      
 #### Enviar START BIT
 
-O código percorre bit por bit de cada caractere e realiza um bit shift para a direita e também realizando um and com o byte 0x01. Desta forma, todos os bits são zerados, com excessão do mais significativo. A cada iteração, o bit shift faz com que o bit significativo seja alterado.
+O código percorre bit por bit de cada caractere e realiza um bit shift para a direita e também realizando um and com o byte 0x01. Desta forma, todos os bits são zerados, com excessão do mais significativo. A cada iteração, o bit shift faz com que o bit significativo seja alterado e enviado ao pino tx do arduino.
  
  ```
 for(int i = 0; i <= 7 ; i++) {
@@ -56,20 +56,65 @@ for(int i = 0; i <= 7 ; i++) {
    } 
  ```
           
-#### Enviar Parity bit
+#### Parity bit
 
-COMPLETAR DOC (CHEGA POR HJ)
+***Cálculo do parity bit**: Inicialmente, o código realiza o mesmo processo que o código do envio do START BIT. Contudo, ao invés de enviar o bit mais significativo para o pino de transmissão, este é mantido em uma variável. Cada iteração faz com que o bit significativo seja somado aos bits significativos anteriores.
+
+Após a soma dos bits é posta uma condição pois deseja-se obter o bit de paridade IMPAR. Desta forma, se a divisão do valor da soma dos bits significativos for não divisível por 2, o código retorna 0 e caso contrário, retorna 1. 
 
  ```
-for(int i = 0; i <= 7 ; i++) {
-     int pyl = data >> i & 0x01;
-     digitalWrite(uart -> pin_tx, pyl);
-     _sw_uart_wait_T(uart);
-   } 
+int calc_even_parity(char data) {
+  int sum = 0;
+  for(int i = 0; i<=7; i++){
+    sum += (data >> i) & 0x01;
+  }
+
+  if (sum % 2 == 1)
+   {
+    return 0;
+  }
+  else
+   {
+    return 1;
+  }
+
+} 
  ```
 
+**Envio do parity bit**: Inicialmente, a variável parity é definida como 0. O valor é atualizado de acordo com o resultado da função descrita no item de cálculo do parity bit. 
 
-## Itens extras
+ ```
+  int parity = 0;
+
+  if(uart->paritybit == SW_UART_EVEN_PARITY) {
+     parity = calc_even_parity(data);
+  } else if(uart->paritybit == SW_UART_ODD_PARITY) {
+     parity = !calc_even_parity(data);
+  }
+ ```
+ 
+ Por fim, o valor já atualizado de acordo com os dados passados na função de cálculo é enviado para o pino tx do Arduíno.
+ 
+ ```
+  if(uart->paritybit != SW_UART_NO_PARITY) {
+    digitalWrite(uart -> pin_tx, parity);
+    _sw_uart_wait_T(uart);
+  }
+ ```
+
+#### Enviar STOP BIT
+
+O envio de um pacote é finalizado com o envio do sinal 1 (HIGH) para o pino tx, fazendo com que o canal de transmissão volte ao seu estado inicial.
+
+```
+  for(int i = 0; i < uart->stopbits; i++) {
+    digitalWrite(uart -> pin_tx, HIGH);
+    _sw_uart_wait_T(uart);
+  }
+}
+```
+
+## Descrição do RX
 
 - Implementar um protocolo próprio de transmissão e recepção de dados.
 
