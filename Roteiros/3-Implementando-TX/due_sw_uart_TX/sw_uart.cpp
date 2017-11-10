@@ -75,7 +75,7 @@ void sw_uart_write_byte(due_sw_uart *uart, char data) {
   for(int i = 0; i < uart->stopbits; i++) {
     digitalWrite(uart -> pin_tx, HIGH);
     _sw_uart_wait_T(uart);
-  } 
+  }
 }
 
 // MCK 21MHz

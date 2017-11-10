@@ -12,8 +12,8 @@ void loop() {
 }
 
 void test_write() {
-  sw_uart_write_string(&uart,"Lux n é suporte\n");
-  delay(5);
+  sw_uart_write_string(&uart,"Luxuoso leitor lendo lista de letras\n");
+  delay(50);
 }
 
 void test_receive() {
